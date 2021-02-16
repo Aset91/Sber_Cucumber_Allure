@@ -5,8 +5,14 @@ import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import java.net.MalformedURLException;
+import java.net.URI;
 
 import static ru.appline.framework.utils.PropConst.*;
+
 
 public class DriverManager {
 
@@ -24,51 +30,71 @@ public class DriverManager {
     /**
      * Manager properties
      */
-    // private final TestPropManager props = TestPropManager.getTestPropManager();
+    private static TestPropManager props = TestPropManager.getTestPropManager();
 
-    TestPropManager props = TestPropManager.getTestPropManager();
+    /**
+     * конструктор синглтона
+     */
 
     private DriverManager() {
         initDriver();
     }
-    public static  WebDriver getDriver(){
-        if(INSTANCE == null) {
+
+    /**
+     * Метод ленивой инициализации веб драйвера
+     *
+     * @return WebDriver - возвращает веб драйвер
+     */
+
+    public static WebDriver getDriver() {
+        if (INSTANCE == null) {
             INSTANCE = new DriverManager();
         }
         return driver;
     }
-    public static void quitDriver(){
-        if(driver != null) {
+
+    private void initDriver() {
+        switch (props.getProperty(TYPE_BROWSER)) {
+            case "firefox":
+                System.setProperty("webdriver.gecko.driver", props.getProperty(PATH_GECKO_DRIVER));
+                driver = new FirefoxDriver();
+                break;
+            case "chrome":
+                System.setProperty("webdriver.chrome.driver", props.getProperty(PATH_CHROME_DRIVER));
+                driver = new ChromeDriver();
+                break;
+            case "remote":
+                DesiredCapabilities capabilities = new DesiredCapabilities();
+                capabilities.setBrowserName("chrome");
+                capabilities.setVersion("73.0");
+                capabilities.setCapability("enableVNC", true);
+                capabilities.setCapability("enableVideo", false);
+                try {
+                    driver = new RemoteWebDriver(
+                            URI.create("http://selenoid.appline.ru:4445/wd/hub/").toURL(),
+                            capabilities);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
+
+    /**
+     * Метод для закрытия сессии драйвера и браузера
+     *
+     * @see WebDriver#quit()
+     */
+    public static void quitDriver() {
+        if (driver != null) {
             driver.quit();
             driver = null;
             INSTANCE = null;
         }
     }
-
-    private void initDriver() {
-        if(OS.isFamilyWindows()) {
-            initDriverAnyOsFamily(PATH_GECKO_DRIVER_WINDOWS, PATH_CHROME_DRIVER_WINDOWS);
-        } else if (OS.isFamilyMac()) {
-            initDriverAnyOsFamily(PATH_GECKO_DRIVER_MAC, PATH_CHROME_DRIVER_MAC);
-        } else if (OS.isFamilyUnix()) {
-            initDriverAnyOsFamily(PATH_GECKO_DRIVER_UNIX, PATH_CHROME_DRIVER_UNIX);
-        }
-    }
-
-
-    private void initDriverAnyOsFamily(String gecko, String chrome) {
-        switch (props.getProperty(TYPE_BROWSER)) {
-            case "firefox" :
-                System.setProperty("webdriver.gecko.driver", props.getProperty(gecko));
-                driver = new FirefoxDriver();
-                break;
-            case "chrome" :
-                System.setProperty("webdriver.chrome.driver", props.getProperty(chrome));
-                driver = new ChromeDriver();
-                break;
-            default:
-                Assert.fail("Типа браузера '" + props.getProperty(TYPE_BROWSER) + "' не существует во фреймворке");
-        }
-    }
-
 }
+
+
+
+
+
+

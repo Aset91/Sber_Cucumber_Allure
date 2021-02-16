@@ -39,12 +39,12 @@ public class TestPropManager {
      * либо из файла, переданного пользователем через настройку - DropFile
      */
     private void loadApplicationProperties(){
+
         try {
             properties.load(new FileInputStream(
-                    new File("src/main/resources") +
-                            System.getProperty("propFile", "application" + ".properties")));
-        }
-        catch(IOException e) {
+                    new File("src/main/resources/" +
+                            System.getProperty("env", "application") + ".properties")));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -62,16 +62,6 @@ public class TestPropManager {
             }
         }));
 
-        /* public void loadCustomProperties(){
-        for (Map.Entry<Object, Object> itemMy: properties.entrySet()) {
-        for(Map.Entry<Object, Object> itemSystem : System.getProperties().entrySet()) {
-        if (itemMy.getKey().toString().equals(itemSystem.getKey().toString()) &&
-        !itemMy.getValue().toString().equals(itemSystem.getValue().toString())) {
-        properties.setProperty(key.toString(), customUserValue.toString());
-        }
-      }
-    }
-         */
     }
     /**
      * Метод возвращает либо значение, записанное в ключе в переменной,

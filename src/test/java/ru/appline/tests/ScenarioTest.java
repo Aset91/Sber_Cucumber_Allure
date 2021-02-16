@@ -15,7 +15,8 @@ public class ScenarioTest extends BaseTests {
     @Test
     public void scenarioTest() {
 
-        PageManager.getPageManager().getStartPage().closeCookiesWindow()
+        pageManager.getStartPage()
+                .closeCookiesWindow()
                 .openMortgageWindow()
                 .chooseReadyEstateSubmenu()
                 .checkOpenPage()

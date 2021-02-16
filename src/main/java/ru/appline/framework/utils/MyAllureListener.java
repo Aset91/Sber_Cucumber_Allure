@@ -1,9 +1,15 @@
 package ru.appline.framework.utils;
 
-import com.sun.xml.internal.ws.developer.StreamingAttachment;
+//import com.sun.xml.internal.ws.developer.StreamingAttachment;
+import io.qameta.allure.Attachment;
+import io.qameta.allure.junit4.AllureJunit4;
+import org.junit.runner.notification.Failure;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import ru.appline.framework.managers.DriverManager;
+
+import static io.qameta.allure.util.ResultsUtils.getStatus;
+import static io.qameta.allure.util.ResultsUtils.getStatusDetails;
 
 public class MyAllureListener extends AllureJunit4 {
 
@@ -11,11 +17,12 @@ public class MyAllureListener extends AllureJunit4 {
     public static byte[] addScreenshot() {
         return ((TakesScreenshot) DriverManager.getDriver()).getScreenshotAs(OutputType.BYTES);
     }
-
-    @Attachment(value = "Page screenShot", type = "image/png")
-    public byte[] saveScreenShot(byte[] screenShot) {
-        return screenShot;
+    @Override
+    public void testFailure(final Failure failure) {
+        addScreenshot();
+        super.testFailure(failure);
     }
+
 
 
 }

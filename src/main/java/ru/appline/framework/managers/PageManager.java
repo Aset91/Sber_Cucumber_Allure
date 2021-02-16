@@ -5,18 +5,30 @@ import ru.appline.framework.pages.StartPage;
 
 public class PageManager {
     private static PageManager pageManager;
-    private StartPage startPage;
-    private MortgagePage mortgagePage;
+    StartPage startPage;
+    MortgagePage mortgagePage;
 
+    /**
+     * Конструктор синглтона
+     */
     private PageManager(){
-
     }
+    /**
+     * Ленивая инициализация PageManager
+     *
+     * @return PageManager
+     */
     public static PageManager getPageManager(){
         if(pageManager == null) {
             pageManager = new PageManager();
         }
          return pageManager;
     }
+
+    /**
+     * Ленивая инициализация StartPage
+     * @return StartPage
+     */
     public StartPage getStartPage(){
         if(startPage == null) {
             startPage = new StartPage();
@@ -24,10 +36,21 @@ public class PageManager {
         return startPage;
     }
 
+    /**
+     * Ленивая инициализация MortgagePage
+     * @return MortgagePage
+     */
     public MortgagePage getMortgagePage() {
-        if(startPage == null){
-            startPage = new StartPage();
+        if(mortgagePage == null){
+            mortgagePage = new MortgagePage();
         }
         return mortgagePage;
+    }
+
+    /**
+     * Сброс менеджера страничек
+     */
+    public static void disablePageManager() {
+        pageManager = null;
     }
 }

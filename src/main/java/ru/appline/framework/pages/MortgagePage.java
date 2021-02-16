@@ -1,5 +1,6 @@
 package ru.appline.framework.pages;
 
+import io.qameta.allure.Step;
 import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -41,6 +42,17 @@ public class MortgagePage extends BasePage {
                 "Ипотека на готовое жилье — СберБанк", getDriver().getTitle());
         return this;
     }
+
+//    /**
+//     * Проверка открытия страницы, путём проверки title страницы
+//     * @param title
+//     * @return MortgagePage - т.е. остаемся на этой странице
+//     */
+//    public MortgagePage checkOpenPage(String title) {
+//        Assert.assertEquals("Заголовок отсутствует/не соответствует требуемому",
+//                title, getDriver().getTitle());
+//        return this;
+//    }
 
     /**
      * Переключение окон
