@@ -33,49 +33,38 @@ public class MortgagePage extends BasePage {
     @FindBy(xpath = "//li[@class='_2oHcdFLGCjojtWqwTIofQG']//span[@data-e2e-id='mland-calculator/medium-result-credit-rate']//span")
     public WebElement interestRate;
 
-    /**
-     * Проверка заголовка страницы
-     */
-    @Step("Проверка заголовка страницы")
-    public MortgagePage checkOpenPage() {
-        Assert.assertEquals("Заголовок не соответствует ожидаемому",
-                "Ипотека на готовое жилье — СберБанк", getDriver().getTitle());
-        return this;
-    }
-
 //    /**
-//     * Проверка открытия страницы, путём проверки title страницы
-//     * @param title
-//     * @return MortgagePage - т.е. остаемся на этой странице
+//     * Проверка заголовка страницы
 //     */
-//    public MortgagePage checkOpenPage(String title) {
-//        Assert.assertEquals("Заголовок отсутствует/не соответствует требуемому",
-//                title, getDriver().getTitle());
+//    @Step("Проверка заголовка страницы")
+//    public MortgagePage checkOpenPage() {
+//        Assert.assertEquals("Заголовок не соответствует ожидаемому",
+//                "Ипотека на готовое жилье — СберБанк", getDriver().getTitle());
 //        return this;
 //    }
+//
+//    /**
+//     * Переключение окон
+//     */
+//    @Step("Переключение окон")
+//    public MortgagePage switchWindows() {
+//        getDriver().switchTo().frame("iFrameResizer0");
+//        return this;
+//    }
+//
+//    public void waitUntilLoaded() {
+//        try {
+//            sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    /**
-     * Переключение окон
-     */
-    @Step("Переключение окон")
-    public MortgagePage switchWindows() {
-        getDriver().switchTo().frame("iFrameResizer0");
-        return this;
-    }
-
-    public void waitUntilLoaded() {
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public MortgagePage scrollToForm() {
-        scrollToElementJs(propertyPrice);
-        return this;
-    }
+//
+//    public MortgagePage scrollToForm() {
+//        scrollToElementJs(propertyPrice);
+//        return this;
+//    }
 
 
     /**
@@ -88,6 +77,11 @@ public class MortgagePage extends BasePage {
     @Step("Заполнить форму")
 
     public MortgagePage fillField(String text, String value) {
+
+        Assert.assertEquals("Заголовок не соответствует ожидаемому",
+                "Ипотека на готовое жилье — СберБанк", getDriver().getTitle());
+        getDriver().switchTo().frame("iFrameResizer0");
+        scrollToElementJs(propertyPrice);
         WebElement element = null;
         switch (text) {
             case "Стоимость недвижимости":
@@ -134,31 +128,80 @@ public class MortgagePage extends BasePage {
      */
     @Step("Убрать ненужные галочки")
 
-    public MortgagePage removeCheckboxes() {
-        lifeInsuranceCheckbox.click();
-        domClickDiscount.click();
-        eRegistration.click();
-        return this;
-    }
-
     /**
-     * Проверка расчетных данных
+     * Убрать ненужные галочки
+     * @param text название поля
+     * @param value значение
      */
-    @Step("Проверка расчетных данных")
-    public MortgagePage checkCalculations() {
+    public MortgagePage removeCheckboxes(String text, String value) {
+
         try {
             sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Assert.assertEquals("Поле 'Сумма кредита' было заполнено некорректно",
-                "2122000", creditAmount.getAttribute("textContent").replaceAll("[^{\\d,}]", ""));
-        Assert.assertEquals("Поле 'Ежемесячный платеж' было заполнено некорректно",
-                "16922", monthlyPayment.getAttribute("textContent").replaceAll("[^{\\d,}]", ""));
-        Assert.assertEquals("Поле 'Необходимый доход' было заполнено некорректно",
-                "21784", requiredSalary.getAttribute("textContent").replaceAll("[^{\\d,}]", ""));
-        Assert.assertEquals("Поле 'Процентная ставка' было заполнено некорректно",
-                "11", interestRate.getAttribute("textContent").replaceAll("[^{\\d,}]", ""));
+        WebElement element = null;
+
+        switch (text) {
+            case "Страхование жизни и здоровья":
+                element = lifeInsuranceCheckbox;
+                if (lifeInsuranceCheckbox.getAttribute("ariaChecked").equals("true")) {
+                    lifeInsuranceCheckbox.click();
+                    value = "Опция не выбрана";
+                }
+            case "Скидка 0,3% при покупке квартиры на ДомКлик":
+                element = domClickDiscount;
+                if (domClickDiscount.getAttribute("ariaChecked").equals("true")) {
+                    domClickDiscount.click();
+                    value = "Опция не выбрана";
+                }
+            case "Электронная регистрация сделки":
+                element = domClickDiscount;
+                if (domClickDiscount.getAttribute("ariaChecked").equals("true")) {
+                    domClickDiscount.click();
+                    value = "Опция не выбрана";
+                }
+                scrollToElementJs(lifeInsuranceCheckbox);
+        }
+        return this;
+    }
+
+    /**
+     * Проверка расчетных данных
+     *
+     * @param text  название поля
+     * @param value значение
+     */
+
+    public MortgagePage checkCalculations(String text, String value) {
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        scrollToElementJs(creditAmount);
+        WebElement element = null;
+
+        switch (text) {
+            case "Сумма кредита":
+                element = creditAmount;
+                break;
+
+            case "Ежемесячный платеж":
+                element = monthlyPayment;
+                break;
+
+            case "Необходимый доход":
+                element = requiredSalary;
+                break;
+
+            case "Процентная ставка":
+                element = interestRate;
+                break;
+        }
+        Assert.assertEquals("Поле " + element.getText() + " было заполнено некорректно",
+                value, element.getAttribute("textContent").replaceAll("[^{\\d,}]", ""));
+
         return this;
     }
 

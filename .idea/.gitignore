@@ -1,4 +1,9 @@
-# Default ignored files
-.idea
+# Folder ignoring
 target
+.idea
+.allure
+
+# File ignoring
 *.iml
+*.war
+*.jar

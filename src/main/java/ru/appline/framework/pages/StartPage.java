@@ -8,6 +8,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
+import static java.lang.Thread.sleep;
 import static ru.appline.framework.managers.DriverManager.getDriver;
 
 
@@ -28,20 +29,26 @@ public class StartPage extends  BasePage {
     @FindBy(xpath = "//a[@data-cga_click_top_menu='Ипотека_Ипотека на готовое жильё_type_important']")
     WebElement readyEstate;
 
-    /**
-     * Закрыть окно Cookies
-     */
-    @Step("Закрыть окно Cookies")
-    public StartPage closeCookiesWindow() {
-        cookies.click();
-        return this;
-    }
+//    /**
+//     * Закрыть окно Cookies
+//     */
+//    @Step("Закрыть окно Cookies")
+//    public StartPage() {
+//        cookies.click();
+//        return this;
+//    }
 
     /**
      * В верхнем меню "нажать" на Ипотека - дождаться открытия выпадающего меню
      */
     @Step("В верхнем меню нажать на Ипотека - дождаться открытия выпадающего меню")
     public StartPage openMortgageWindow() {
+        cookies.click();
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         mortgage.click();
         return this;
     }
