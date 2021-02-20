@@ -16,18 +16,17 @@ public class ScenarioTest extends BaseTests {
     public void scenarioTest() {
 
         pageManager.getStartPage()
-                .openMortgageWindow()
-                .chooseReadyEstateSubmenu()
+                .selectBaseMenu("Ипотека")
+                .selectSubMenu("Ипотека на готовое жильё")
                 .fillField("Стоимость недвижимости", "5 180 000")
                 .fillField("Первоначальный взнос", "3 058 000")
                 .fillField("Срок кредита", "30")
-                .removeCheckboxes("Страхование жизни и здоровья", "Опция не выбрана")
-                .removeCheckboxes("Скидка 0,3% при покупке квартиры на ДомКлик", "Опция не выбрана")
-                .removeCheckboxes("Электронная регистрация сделки", "Опция не выбрана")
-                .checkCalculations("Сумма кредита", "2 122 000")
-                .checkCalculations("Ежемесячный платеж", "16 922")
-                .checkCalculations("Необходимый доход", "21 784")
+                .removeCheckboxes("Страхование жизни и здоровья")
+                .removeCheckboxes("Скидка 0,3% при покупке квартиры на ДомКлик")
+                .removeCheckboxes("Электронная регистрация сделки")
+                .checkCalculations("Сумма кредита", "2122000")
+                .checkCalculations("Ежемесячный платеж", "16922")
+                .checkCalculations("Необходимый доход", "21784")
                 .checkCalculations("Процентная ставка", "11");
-
     }
 }

@@ -13,6 +13,7 @@ import ru.appline.framework.managers.TestPropManager;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Thread.sleep;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static ru.appline.framework.managers.DriverManager.getDriver;
 import static ru.appline.framework.utils.PropConst.IMPLICITLY_WAIT;
@@ -53,57 +54,59 @@ public class BasePage {
 
     /**
      * Метод для смещения до середины экрана
+     *
      * @param x - параметр координат по горизонтали
-     * @param  y - параметр координатр по вертикали
+     * @param y - параметр координатр по вертикали
      */
-     public void scrollWithOffset(WebElement element, int x, int y) {
-         String code = "window.scroll(" + (element.getLocation().x + x) + ","
-                 + (element.getLocation().y + y) + ");";
-         ((JavascriptExecutor) getDriver()).executeScript(code, element, x, y);
-     }
+    public void scrollWithOffset(WebElement element, int x, int y) {
+        String code = "window.scroll(" + (element.getLocation().x + x) + ","
+                + (element.getLocation().y + y) + ");";
+        ((JavascriptExecutor) getDriver()).executeScript(code, element, x, y);
+    }
 
-        /**
-         * Объект для имитации реального поведения мыши или клавиатуры
-         *
-         * @see Actions
-         */
-        protected Actions action = new Actions(getDriver());
+    /**
+     * Объект для имитации реального поведения мыши или клавиатуры
+     *
+     * @see Actions
+     */
+    protected Actions action = new Actions(getDriver());
 
-        /**
-         * Объект для выполнения любого js кода
-         *
-         * @see JavascriptExecutor
-         */
-        protected JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    /**
+     * Объект для выполнения любого js кода
+     *
+     * @see JavascriptExecutor
+     */
+    protected JavascriptExecutor js = (JavascriptExecutor) getDriver();
 
-        /**
-         * Явное ожидание состояния кликабельности элемента
-         *
-         * @param element - веб-элемент который требует проверки на кликабельность
-         * @return WebElement - возвращаем тот же веб элемент что был передан в функцию
-         * @see WebDriverWait
-         * @see org.openqa.selenium.support.ui.FluentWait
-         * @see org.openqa.selenium.support.ui.Wait
-         * @see ExpectedConditions
-         */
-        protected WebElement elementToBeClickable(WebElement element) {
-            return wait.until(ExpectedConditions.elementToBeClickable(element));
-        }
+    /**
+     * Явное ожидание состояния кликабельности элемента
+     *
+     * @param element - веб-элемент который требует проверки на кликабельность
+     * @return WebElement - возвращаем тот же веб элемент что был передан в функцию
+     * @see WebDriverWait
+     * @see org.openqa.selenium.support.ui.FluentWait
+     * @see org.openqa.selenium.support.ui.Wait
+     * @see ExpectedConditions
+     */
+    protected WebElement elementToBeClickable(WebElement element) {
+        return wait.until(ExpectedConditions.elementToBeClickable(element));
+    }
 
-        protected WebElement elementToBeVisible(WebElement element) {
-            return wait.until(ExpectedConditions.visibilityOf(element));
-        }
+    protected WebElement elementToBeVisible(WebElement element) {
+        return wait.until(ExpectedConditions.visibilityOf(element));
+    }
 
-        /**
-         * Общий метод по заполнению полей с датой
-         *
-         * @param field - веб-елемент поле с датой
-         * @param value - значение вводимое в поле с датой
-         */
-        public void fillDateField(WebElement field, String value) {
-            scrollToElementJs(field);
-            field.sendKeys(value);
-        }
+    /**
+     * Общий метод по заполнению полей с датой
+     *
+     * @param field - веб-елемент поле с датой
+     * @param value - значение вводимое в поле с датой
+     */
+    public void fillDateField(WebElement field, String value) {
+        scrollToElementJs(field);
+        field.sendKeys(value);
+    }
+
     /**
      * Функция позволяющая скролить до любого элемента с помощью js
      *
@@ -119,7 +122,7 @@ public class BasePage {
      * Общий метод по заполнения полей ввода
      *
      * @param element - веб-елемент поле ввода
-     * @param value - значение вводимое в поле
+     * @param value   - значение вводимое в поле
      */
     public void fillInputField(WebElement element, String value) {
         scrollToElementJs(element);
@@ -128,9 +131,10 @@ public class BasePage {
         Assert.assertEquals("Поле было заполнено некорректно",
                 value, element.getAttribute("value"));
     }
+
     public boolean isElementExists(By by) {
         boolean flag = false;
-        try{
+        try {
             getDriver().manage().timeouts().implicitlyWait(1, SECONDS);
             getDriver().findElement(by);
             flag = true;
@@ -141,5 +145,12 @@ public class BasePage {
         return flag;
     }
 
+    public void waitUntilLoaded() {
+        try {
+            sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
